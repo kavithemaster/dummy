@@ -111,9 +111,10 @@ const myApp = () => {
     <View>
       <ScrollView>
         <View >
-          <Text style={{ fontSize: 20, justifyContent: "center", alignSelf: "center", fontWeight: "800", color: "black",textTransform:"capitalize"}}>textile transportation </Text>
+          <Text style={{ fontSize: 20, justifyContent: "center", alignSelf: "center", fontWeight: "800", color: "black", textTransform: "capitalize" }}>textile transportation </Text>
           <View style={styles.inputContainer}>
-            <Text style={styles.placeholderText}>Name</Text>
+            {<Text style={styles.placeholderText}>Name{formik.errors.name ? <Text style={styles.errorStar}>  *</Text> : null}</Text>}
+            {/* {formik.errors.name ? <Text style={styles.errorStar}>*</Text> : null} */}
             <TextInput placeholder=""
               onChangeText={formik.handleChange('name')}
               placeholderTextColor="blue"
@@ -125,7 +126,8 @@ const myApp = () => {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.placeholderText}>Email Address</Text>
+            <Text style={styles.placeholderText}>Email Address {formik.errors.email ? <Text style={styles.errorStar}>  *</Text> : null}</Text>
+            {/* {formik.errors.email ? <Text style={styles.errorStar}>*</Text> : null} */}
             <TextInput placeholder=""
               onChangeText={formik.handleChange('email')}
               placeholderTextColor="blue"
@@ -140,7 +142,8 @@ const myApp = () => {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.placeholderText}>Password</Text>
+            <Text style={styles.placeholderText}>Password  {formik.errors.password ? <Text style={styles.errorStar}>  *</Text> : null}</Text>
+            {/* {formik.errors.password ? <Text style={styles.errorStar}>*</Text> : null} */}
             <TextInput placeholder=""
               onChangeText={formik.handleChange('password')}
               placeholderTextColor="blue"
@@ -170,7 +173,8 @@ const myApp = () => {
 
 
           <View style={styles.inputContainer}>
-            <Text style={styles.placeholderText}>Phone Number</Text>
+            <Text style={styles.placeholderText}>Phone Number {formik.errors.phoneNumber ? <Text style={styles.errorStar}>  *</Text> : null}</Text>
+            {/* {formik.errors.phoneNumber ? <Text style={styles.errorStar}>*</Text> : null} */}
             <TextInput placeholder=""
               onChangeText={formik.handleChange('phoneNumber')}
               placeholderTextColor="blue"
@@ -201,7 +205,8 @@ const myApp = () => {
             )}
           </View>
           <View style={{ left: 40, top: 10 }}>
-            <Text style={styles.placeholderText}>Gender</Text>
+            <Text style={styles.placeholderText}>Gender{formik.errors.gender ? <Text style={styles.errorStar}>  *</Text> : null}</Text>
+            {/* {formik.errors.gender ? <Text style={styles.errorStar}>*</Text> : null} */}
             <View >
               {
                 Gender.map((maf, i) => (
@@ -224,6 +229,7 @@ const myApp = () => {
 
           <View style={{ left: 40, top: 1 }}>
             <Text style={styles.placeholderText}>Select Your States</Text>
+            {formik.errors.states ? <Text style={{ position: "absolute", fontSize: 22, fontWeight: "800", color: "red", left: 150 }}>  *</Text> : null}
             <View >
               {
                 States.map((sts, j) => (
@@ -234,7 +240,14 @@ const myApp = () => {
                       uncheckedIcon={'circle-o'}
                       checkedColor="black"
                       uncheckedColor="black"
-                      onPress={() => formik.setFieldValue('states', sts)}
+                      onPress={() => {
+                        if (sts == formik.values.states) {
+                          formik.setFieldValue('states', '')
+                        }
+                        else {
+                          formik.setFieldValue('states', sts)
+                        }
+                      }}
                     />
                     <Text style={{ textTransform: "capitalize", alignSelf: "center", color: "black", fontSize: 15, fontWeight: "800" }}>{sts}</Text>
                   </View>
@@ -245,10 +258,10 @@ const myApp = () => {
           </View>
 
           {/* Code for DropDownPicker */}
-          <View >
+          {formik.values.states && <View >
             <View style={styles.inputContainer}>
-              <Text style={styles.placeholderText}>Select Your Districts</Text>
-              <Text style={{ fontSize: 14, top: 5, fontWeight: "600" }}>Note: Choose any one States before clicking to Districts</Text>
+              <Text style={styles.placeholderText}>Select Your Districts {formik.errors.selectDistricts ? <Text style={styles.errorStar}>*</Text> : null}</Text>
+
             </View>
             <View style={styles.inputContainer}>
               <DropDownPicker
@@ -265,13 +278,13 @@ const myApp = () => {
               />
               <Text style={styles.errorText}>{formik.touched.selectDistricts && formik.errors.selectDistricts}</Text>
             </View>
-          </View>
+          </View>}
 
           <View style={styles.inputContainer}>
             <Text style={styles.placeholderText}>FeedBack </Text>
             <TextInput placeholder=""
               onChangeText={formik.handleChange('feedBack')}
-              style={{ width: "100%", borderRadius: 10, borderWidth: 2, top: 14, fontWeight: "800", fontSize: 16, alignSelf: "flex-start",paddingLeft:10 }}
+              style={{ width: "100%", borderRadius: 10, borderWidth: 2, top: 14, fontWeight: "800", fontSize: 16, alignSelf: "flex-start", paddingLeft: 10 }}
               value={formik.values?.feedBack}
               onBlur={formik.handleBlur('feedBack')}
               multiline
@@ -279,8 +292,8 @@ const myApp = () => {
           </View>
 
           <View>
-            <TouchableOpacity style={styles.button} onPress={formik.handleSubmit}>
-              <Text style={styles.headingStyle} >REGISTER</Text>
+            <TouchableOpacity style={[styles.button, { backgroundColor: formik.isValid ? 'lightblue' : 'blue' }]} onPress={formik.handleSubmit}>
+              <Text style={styles.headingStyle}>REGISTER</Text>
             </TouchableOpacity>
           </View>
 
@@ -309,7 +322,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     justifyContent: "space-between",
-    top: 7,
+    top: 12,
   },
   textInputStyle: {
     width: "100%",
@@ -321,7 +334,6 @@ const styles = StyleSheet.create({
   button: {
     width: "80%",
     height: 40,
-    backgroundColor: "blue",
     top: 70,
     alignSelf: "center",
     alignItems: "center",
@@ -339,37 +351,13 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     fontSize: 14,
-    bottom: 8,
+    bottom: 12,
     top: 1
+  },
+  errorStar: {
+    fontSize: 22, color: "red"
   }
 });
 
 export default myApp;
-// import React, { useState } from 'react';
-// import { View, StyleSheet } from 'react-native';
-// import DropDownPicker from 'react-native-dropdown-picker';
 
-// function App() {
-//   const [open, setOpen] = useState(false);
-//   const [value, setValue] = useState(null);
-//   const [items, setItems] = useState([
-//     { label: 'Apple', value: 'apple' },
-//     { label: 'Banana', value: 'banana' }
-//   ]);
-
-//   return (
-//     <View>
-//       <DropDownPicker
-//         open={open}
-//         value={value}
-//         items={items}
-//         setOpen={setOpen}
-//         setValue={setValue}
-//         setItems={setItems}
-//       />
-//     </View>
-//   );
-// }
-
-
-// export default App;
