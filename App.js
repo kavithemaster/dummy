@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { CheckBox } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome"
@@ -14,7 +14,7 @@ const myApp = () => {
 
   const Gender = ['male', 'female']
 
-  const States = ['tamil nadu', 'kerela', 'karanataka', ' andhra pradhesh']
+  const States = ['TamilNadu', 'kerela', 'karanataka', 'AndhraPradhesh']
 
 
   const [datePicker, setDatePicker] = useState(false)
@@ -24,10 +24,6 @@ const myApp = () => {
   const [dropOpen, setDropOpen] = useState(false)
 
   const districts = allDatas
-
-  const dropdown = [{ label: 'ss', value: 'ss' }, { label: 't', value: 't' }, { label: 'y', value: 'y' }]
-
-
 
 
   const onDateSelected = (event, value) => {
@@ -79,14 +75,14 @@ const myApp = () => {
       .required("Atleast one states should be selected"),
     selectDistricts: Yup
       .string()
-      .when('succes', (succes, schema) => {
-        if (succes[0])
-          return schema.required(Errors.required)
-      })
+      .required("Please select the places"),
   })
   const handleSubmit = (values) => {
     console.log(values);
   }
+
+  const [items, setItems] = useState(districts.TamilNadu)
+
 
   const formik = useFormik({
     initialValues: {
@@ -98,19 +94,26 @@ const myApp = () => {
       gender: "",
       states: "",
       selectDistricts: "",
+      dob: "",
+      feedBack: "",
     },
     validationSchema: validationSchema,
     onSubmit: handleSubmit,
   })
+
+  useEffect(() => {
+    console.log("sttas", formik.values.states, districts[formik.values.states])
+    formik.values.states && setItems(districts[formik.values.states])
+  }, [formik.values.states])
 
   return (
 
     <View>
       <ScrollView>
         <View >
-          <Text style={{ fontSize: 20, justifyContent: "center", alignSelf: "center", fontWeight: "800", color: "black" }}>Your Tickets</Text>
+          <Text style={{ fontSize: 20, justifyContent: "center", alignSelf: "center", fontWeight: "800", color: "black",textTransform:"capitalize"}}>textile transportation </Text>
           <View style={styles.inputContainer}>
-            <Text style={styles.placeholderText}>Name *</Text>
+            <Text style={styles.placeholderText}>Name</Text>
             <TextInput placeholder=""
               onChangeText={formik.handleChange('name')}
               placeholderTextColor="blue"
@@ -122,7 +125,7 @@ const myApp = () => {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.placeholderText}>Email Address *</Text>
+            <Text style={styles.placeholderText}>Email Address</Text>
             <TextInput placeholder=""
               onChangeText={formik.handleChange('email')}
               placeholderTextColor="blue"
@@ -137,19 +140,21 @@ const myApp = () => {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.placeholderText}>Password *</Text>
+            <Text style={styles.placeholderText}>Password</Text>
             <TextInput placeholder=""
               onChangeText={formik.handleChange('password')}
               placeholderTextColor="blue"
               style={styles.textInputStyle}
               value={formik.values?.password}
               onBlur={formik.handleBlur('password')}
+              secureTextEntry
             />
             <Text style={styles.errorText}>{formik.touched.password && formik.errors.password}</Text>
 
           </View>
 
-          <View style={styles.inputContainer}>
+
+          {/* <View style={styles.inputContainer}>
             <Text style={styles.placeholderText}>Confirm Password *</Text>
             <TextInput placeholder=""
               onChangeText={formik.handleChange('conformPassword')}
@@ -157,12 +162,15 @@ const myApp = () => {
               style={styles.textInputStyle}
               value={formik.values?.conformPassword}
               onBlur={formik.handleBlur('conformPassword')}
+              secureTextEntry
             />
             <Text style={styles.errorText}>{formik.touched.conformPassword && formik.errors.conformPassword}</Text>
 
-          </View>
+          </View> */}
+
+
           <View style={styles.inputContainer}>
-            <Text style={styles.placeholderText}>Phone Number *</Text>
+            <Text style={styles.placeholderText}>Phone Number</Text>
             <TextInput placeholder=""
               onChangeText={formik.handleChange('phoneNumber')}
               placeholderTextColor="blue"
@@ -177,25 +185,23 @@ const myApp = () => {
 
           <View style={styles.inputContainer}>
             <Text style={styles.placeholderText}>Date Of Birth</Text>
-            <Text style={{ fontSize: 16, color: 'black', marginTop: 45, marginBottom: 10, position: "absolute", marginLeft: 80, fontWeight: "800" }}>{date.toLocaleDateString()}</Text>
-
+            <View style={styles.textInputStyle}>
+              <Text style={{ fontSize: 16, color: 'black', position: "absolute", fontWeight: "800", alignSelf: "flex-start", top: 15 }}>{date.toLocaleDateString()}</Text>
+              <Icon name="calendar" size={25} onPress={setDatePicker} style={{ color: "black", alignSelf: "flex-end", top: 10 }}></Icon>
+            </View>
             {datePicker && (
               <DateTimePicker
                 value={date}
                 mode={'date'}
                 display={Platform.OS === 'android' ? 'spinner' : 'default'}
                 onChange={onDateSelected}
+                style={styles.textInputStyle}
+                maximumDate={new Date()}
               />
             )}
-            {!datePicker && (
-              <View style={styles.placeholderText}>
-                <Icon name="calendar" size={25} onPress={setDatePicker} style={{ marginTop: 12, marginLeft: 40, color: "black" }}></Icon>
-              </View>
-            )}
           </View>
-
           <View style={{ left: 40, top: 10 }}>
-            <Text style={styles.placeholderText}>Gender *</Text>
+            <Text style={styles.placeholderText}>Gender</Text>
             <View >
               {
                 Gender.map((maf, i) => (
@@ -217,7 +223,7 @@ const myApp = () => {
           </View>
 
           <View style={{ left: 40, top: 1 }}>
-            <Text style={styles.placeholderText}>States *</Text>
+            <Text style={styles.placeholderText}>Select Your States</Text>
             <View >
               {
                 States.map((sts, j) => (
@@ -239,17 +245,37 @@ const myApp = () => {
           </View>
 
           {/* Code for DropDownPicker */}
+          <View >
+            <View style={styles.inputContainer}>
+              <Text style={styles.placeholderText}>Select Your Districts</Text>
+              <Text style={{ fontSize: 14, top: 5, fontWeight: "600" }}>Note: Choose any one States before clicking to Districts</Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <DropDownPicker
+                name="selectDistricts"
+                listMode="SCROLLVIEW"
+                disabled={formik.values.states.length ? false : true}
+                items={items}
+                open={dropOpen}
+                setOpen={setDropOpen}
+                placeholder="Choose your Districts"
+                placeholderStyle={{ fontWeight: "700" }}
+                value={formik.values.selectDistricts}
+                onSelectItem={(item) => formik.setFieldValue('selectDistricts', item.value)}
+              />
+              <Text style={styles.errorText}>{formik.touched.selectDistricts && formik.errors.selectDistricts}</Text>
+            </View>
+          </View>
+
           <View style={styles.inputContainer}>
-            <DropDownPicker
-              name="selectDistricts"
-              listMode="SCROLLVIEW"
-              items={formik.values.states ? districts[formik.values.states] : districts.AndhraPradhesh}
-              open={dropOpen}
-              setOpen={setDropOpen}
-              value={formik.values.selectDistricts}
-              onSelectItem={(item)=> formik.setFieldValue('selectDistricts', item.value)}
+            <Text style={styles.placeholderText}>FeedBack </Text>
+            <TextInput placeholder=""
+              onChangeText={formik.handleChange('feedBack')}
+              style={{ width: "100%", borderRadius: 10, borderWidth: 2, top: 14, fontWeight: "800", fontSize: 16, alignSelf: "flex-start",paddingLeft:10 }}
+              value={formik.values?.feedBack}
+              onBlur={formik.handleBlur('feedBack')}
+              multiline
             />
-            {console.log(formik.values.states ? districts[formik.values.states] : districts.TamilNadu)}
           </View>
 
           <View>
@@ -296,12 +322,12 @@ const styles = StyleSheet.create({
     width: "80%",
     height: 40,
     backgroundColor: "blue",
-    marginTop: 18,
+    top: 70,
     alignSelf: "center",
     alignItems: "center",
     paddingTop: 6,
     borderRadius: 10,
-    bottom: 15,
+    marginBottom: 100
   },
   genderText: {
     marginLeft: 42,

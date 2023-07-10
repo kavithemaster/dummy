@@ -2,57 +2,57 @@
     "TamilNadu": [
         {
             "label": "salem",
-            "values": "Salem"
+            "value": "Salem"
         },
         {
             "label": "dharmapuri",
-            "values": "Dharmapuri"
+            "value": "Dharmapuri"
         },
         {
             "label": "nellai",
-            "values": "Nellai"
+            "value": "Nellai"
         }
     ],
     "kerela": [
         {
             "label": "alupula",
-            "values": "Alupula"
+            "value": "Alupula"
         },
         {
             "label": "vagaman",
-            "values": "Vagaman"
+            "value": "Vagaman"
         },
         {
             "label": "kochi",
-            "values": "Kochi"
+            "value": "Kochi"
         }
     ],
     "karanataka": [
         {
             "label": "bagalkote",
-            "values": "Bagalkote"
+            "value": "Bagalkote"
         },
         {
             "label": "gadag",
-            "values": "Gadag"
+            "value": "Gadag"
         },
         {
             "label": "haveri",
-            "values": "Haveri"
+            "value": "Haveri"
         }
     ],
     "AndhraPradhesh": [
         {
             "label": "visakhapatnam",
-            "values": "Visakhapatnam"
+            "value": "Visakhapatnam"
         },
         {
             "label": "godavari",
-            "values": "Godavari"
+            "value": "Godavari"
         },
         {
             "label": "palnadu",
-            "values": "Palnadu"
+            "value": "Palnadu"
         }
     ]
     
